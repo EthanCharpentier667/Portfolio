@@ -10,7 +10,7 @@ const projectData = [
         title: "My Radar",
         description: "MY RADAR is a 2D air traffic simulation game where planes and control towers come to life on screen. Planes follow set paths, take off, land, or collide, while control towers manage safe zones. The project offers real-time visuals and interactive features, providing an engaging way to explore air traffic dynamics.",
         image: "/images/projects/1.png",
-        tag: ["All", "App"],
+        tag: ["All", "Game"],
         gitUrl: "/",
         previewUrl: "/"
     },
@@ -25,12 +25,12 @@ const projectData = [
     },
     {
         id: 3,
-        title: "Secured",
-        description: "A 1st year Epitech project which consists of creating a Hashtable. It's a methode to store data with crypted Keyword/Password",
+        title: "Wolf3D",
+        description: "A 1st year Epitech project which consists of reproctuce wolf3D with CSFML LIB in C language. The project is a 3D game where you can move in a 3D world, shoot enemies and collect items.",
         image: "/images/projects/3.png",
-        tag: ["All", "App"],
+        tag: ["All", "Game"],
         gitUrl: "/",
-        previewUrl: "/"
+        previewUrl: "/launcher"
     },
     {
         id: 4,
@@ -48,7 +48,16 @@ const projectData = [
         image: "/images/projects/5.png",
         tag: ["All", "Game"],
         gitUrl: "https://github.com/EthanCharpentier667/Obake",
-        previewUrl: "/unity"
+        previewUrl: "/launcher"
+    },
+    {
+        id: 6,
+        title: "Launcher",
+        description: "This project is a launcher for all the games I created. It allows you to download theses game and launch them directly from the launcher.",
+        image: "/images/projects/6.png",
+        tag: ["All", "App"],
+        gitUrl: "https://github.com/EthanCharpentier667/Launcher",
+        previewUrl: "/launcher"
     }
 ];
 

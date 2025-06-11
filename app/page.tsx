@@ -1,5 +1,3 @@
-import Image from "next/image";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HeroSection from "./components/HeroSection";
 import ProjectSection from "./components/ProjectSection"
 import AboutSection from "./components/AboutSection"
