@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Sun from './SolarSystem/Sun'
 import Planet from './SolarSystem/Planet'
 import AboutMeSatellite from './SolarSystem/AboutMeSatellite'
-import SelectedPlanetUI from './SolarSystem/SelectedPlanetUI'
+import SelectedPlanetUI from './SolarSystem/SelectedUI/SelectedPlanetUI'
 import WelcomeMenu from './WelcomeMenu'
 import TransitionOverlay from './TransitionOverlay'
 import planetData from '../data/PlanetData'
@@ -12,30 +12,31 @@ import ShootingStars from './SolarSystem/ShootingStars'
 import PortfolioHelpUI from './PortfolioHelpUI'
 
 function SolarSystemScene({ 
-  showWelcome, 
-  isTransitioning, 
-  sunPosition, 
-  setSelected, 
-  resetSatellite, 
-  planetData, 
-  handlePlanetClick, 
-  paused, 
-  setPaused, 
-  resetPlanets, 
-  activePlanetName 
+  showWelcome,
+  isTransitioning,
+  sunPosition,
+  setSelected,
+  resetSatellite,
+  planetData,
+  handlePlanetClick,
+  paused,
+  setPaused,
+  resetPlanets,
+  activePlanetName,
+  selected
 }) {
   const { camera, gl } = useThree()
   const [controls, setControls] = useState(null)
 
   return (
     <>
-      {/* Contrôles (seulement actifs quand pas en transition) */}
+      {/* Contrôles */}
       <OrbitControls 
         ref={setControls}
         enabled={!isTransitioning}
         enableZoom 
-        maxDistance={50}
-        minDistance={5}
+        maxDistance={80}
+        minDistance={18}
         enablePan={false}
       />
       
@@ -57,10 +58,16 @@ function SolarSystemScene({
       {/* Système solaire (caché pendant le menu d'accueil) */}
       {!showWelcome && (
         <>
-          <Sun onSelect={setSelected} />
-          
+          <Sun
+            onSelect={() => {
+              setSelected(selected && selected.name === 'soleil' ? null : { name: 'soleil' })
+            }}
+            isSelected={selected && selected.name === 'soleil'}
+          />
           <AboutMeSatellite 
-            onSelect={setSelected} 
+            onSelect={() => {
+              setSelected(selected && selected.name === 'À propos de moi' ? null : { name: 'À propos de moi' })
+            }}
             resetTrigger={resetSatellite}
             sunPosition={sunPosition}
           />
@@ -170,7 +177,7 @@ export default function SolarSystem() {
         />
       )}
       <Canvas 
-        camera={{ position: [0, 5, 12], fov: 60 }}
+        camera={{ position: [0, 6, 14], fov: 60 }}
         gl={{ antialias: true }}
       >
         <SolarSystemScene 
@@ -185,6 +192,7 @@ export default function SolarSystem() {
           setPaused={setPaused}
           resetPlanets={resetPlanets}
           activePlanetName={activePlanetName}
+          selected={selected}
         />
       </Canvas>
     </div>

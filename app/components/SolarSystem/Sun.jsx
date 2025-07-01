@@ -6,7 +6,7 @@ import SunParticles from './SunParticles'
 import { sunVertexShader, sunFragmentShader } from './CartoonShaders'
 import aboutMeData from '../../data/AboutMeData'
 
-export default function Sun({ onSelect }) {
+export default function Sun({ onSelect, isSelected }) {
   const [sunHovered, setSunHovered] = useState(false)
   const [particlesOpacity, setParticlesOpacity] = useState(0)
   const [sunScale, setSunScale] = useState(1)
@@ -81,9 +81,7 @@ export default function Sun({ onSelect }) {
   }, [sunTexture])
 
   const handleSunClick = () => {
-    onSelect({
-      name: 'soleil',
-    })
+    onSelect()
   }
 
   const getTooltipProps = () => {
@@ -101,6 +99,19 @@ export default function Sun({ onSelect }) {
       distanceFactor: distanceFactor
     }
   }
+  const [showTooltip, setShowTooltip] = useState(false)
+  const [tooltipVisible, setTooltipVisible] = useState(false)
+
+  React.useEffect(() => {
+    if (sunHovered) {
+      setShowTooltip(true)
+      setTimeout(() => setTooltipVisible(true), 10)
+    } else if (showTooltip) {
+      setTooltipVisible(false)
+      const timeout = setTimeout(() => setShowTooltip(false), 250)
+      return () => clearTimeout(timeout)
+    }
+  }, [sunHovered])
 
   useFrame(({ clock }) => {
     const newTooltipProps = getTooltipProps()
@@ -145,7 +156,7 @@ export default function Sun({ onSelect }) {
       coronaRef.current.rotation.y = -elapsed * 0.05
       coronaRef.current.rotation.z = Math.sin(elapsed * 0.3) * 0.1
       const pulseScale = 1 + Math.sin(elapsed * 2) * 0.05
-      const baseScale = coronaScale // Utilise l'état animé au lieu du ternaire
+      const baseScale = coronaScale
       coronaRef.current.scale.setScalar(baseScale * pulseScale)
       const baseOpacity = sunHovered ? 0.25 : 0.15
       const opacityVariation = Math.sin(elapsed * 1.5) * 0.03
@@ -176,7 +187,7 @@ export default function Sun({ onSelect }) {
       {/* Couronne solaire */}
       <mesh 
         ref={coronaRef}
-        scale={coronaScale} // Utilise l'état animé
+        scale={coronaScale}
         renderOrder={1000}
       >
         <sphereGeometry args={[1.5, 32, 32]} />
@@ -188,17 +199,15 @@ export default function Sun({ onSelect }) {
           depthWrite={false}
         />
       </mesh>
-      
       {/* Particules solaires */}
       {particlesOpacity > 0 && (
         <group style={{ opacity: particlesOpacity }}>
           <SunParticles opacity={particlesOpacity} />
         </group>
       )}
-      
       {/* Soleil principal */}
       <mesh
-        scale={sunScale} // Utilise l'état animé
+        scale={sunScale}
         onClick={handleSunClick}
         onPointerOver={() => setSunHovered(true)}
         onPointerOut={() => setSunHovered(false)}
@@ -208,9 +217,8 @@ export default function Sun({ onSelect }) {
         <sphereGeometry args={[1.5, 64, 64]} />
         <primitive object={sunCartoonMaterial} />
       </mesh>
-
       {/* Tooltip du soleil - COMPÉTENCES TECHNIQUES */}
-      {sunHovered && (
+      {showTooltip && (
         <Html 
           position={tooltipProps.position}
           center
@@ -219,23 +227,26 @@ export default function Sun({ onSelect }) {
           transform
           sprite
         >
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(255,204,0,0.95) 0%, rgba(255,170,0,0.95) 100%)',
-            borderRadius: '16px',
-            padding: '16px',
-            minWidth: '320px',
-            maxWidth: '400px',
-            boxShadow: '0 20px 40px rgba(255,170,0,0.4), 0 0 0 1px rgba(255,255,255,0.2)',
-            color: 'black',
-            textAlign: 'left',
-            pointerEvents: 'none',
-            backdropFilter: 'blur(10px)',
-            border: '2px solid #ffcc00',
-            animation: 'fadeInScale 0.3s ease-out',
-            transformOrigin: 'center bottom',
-            transition: 'all 0.2s ease-out',
-            fontSize: '12px'
-          }}>
+          <div
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,204,0,0.95) 0%, rgba(255,170,0,0.95) 100%)',
+              borderRadius: '16px',
+              padding: '16px',
+              minWidth: '320px',
+              maxWidth: '400px',
+              boxShadow: '0 20px 40px rgba(255,170,0,0.4), 0 0 0 1px rgba(255,255,255,0.2)',
+              color: 'black',
+              textAlign: 'left',
+              pointerEvents: 'none',
+              backdropFilter: 'blur(10px)',
+              border: '2px solid #ffcc00',
+              animation: tooltipVisible ? 'fadeInScale 0.3s ease-out' : 'fadeOutScale 0.25s ease-in',
+              transformOrigin: 'center bottom',
+              transition: 'all 0.2s ease-out',
+              fontSize: '12px',
+              opacity: tooltipVisible ? 1 : 0,
+            }}
+          >
             <style jsx>{`
               @keyframes fadeInScale {
                 from {
@@ -245,6 +256,16 @@ export default function Sun({ onSelect }) {
                 to {
                   opacity: 1;
                   transform: scale(1) translateY(0);
+                }
+              }
+              @keyframes fadeOutScale {
+                from {
+                  opacity: 1;
+                  transform: scale(1) translateY(0);
+                }
+                to {
+                  opacity: 0;
+                  transform: scale(0.8) translateY(10px);
                 }
               }
             `}</style>

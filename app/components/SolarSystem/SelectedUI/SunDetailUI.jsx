@@ -1,38 +1,63 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import aboutMeData from '../../../data/AboutMeData'
 
-export default function SunDetailUI({ selected, onClose }) {
-const skills = aboutMeData.skills
-  || {
-      languages: [],
-      frameworks: [],
-      tools: []
+export default function SunDetailUI({ selected, onClose, clickableClose }) {
+  const skills = aboutMeData.skills || {
+    languages: [],
+    frameworks: [],
+    tools: []
+  }
+
+  const [visible, setVisible] = useState(false)
+  const [shouldRender, setShouldRender] = useState(true)
+
+  useEffect(() => {
+    setVisible(true)
+    return () => {
+      setVisible(false)
     }
+  }, [])
+
+  const handleClose = () => {
+    setVisible(false)
+    setTimeout(() => {
+      setShouldRender(false)
+      if (onClose) onClose()
+    }, 300)
+  }
+
+  if (!shouldRender) return null
+
   return (
-    <div style={{
-      position: 'fixed',
-      top: '50%',
-      left: '20px',
-      transform: 'translateY(-50%)',
-      backgroundImage: 'linear-gradient(135deg, rgba(255,204,0,0.95) 0%, rgba(255,136,0,0.95) 100%), radial-gradient(circle at 20% 80%, rgba(255,242,0,0.1) 0%, transparent 50%)',
-      padding: '24px',
-      color: '#1a1a1a',
-      borderRadius: '20px',
-      maxWidth: '420px',
-      minWidth: '380px',
-      maxHeight: '85vh',
-      overflowY: 'auto',
-      zIndex: 10,
-      boxShadow: `
-        0 25px 50px rgba(255,204,0,0.4),
-        0 0 0 1px rgba(255,255,255,0.2),
-        inset 0 1px 0 rgba(255,255,255,0.3)
-      `,
-      border: '2px solid #ffcc00',
-      backdropFilter: 'blur(15px)',
-      animation: 'slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-    }}>
-      
+    <div
+      style={{
+        position: 'fixed',
+        top: '50%',
+        left: '20px',
+        transform: 'translateY(-50%)',
+        backgroundImage: 'linear-gradient(135deg, rgba(255,204,0,0.95) 0%, rgba(255,136,0,0.95) 100%), radial-gradient(circle at 20% 80%, rgba(255,242,0,0.1) 0%, transparent 50%)',
+        padding: '24px',
+        color: '#1a1a1a',
+        borderRadius: '20px',
+        maxWidth: '420px',
+        minWidth: '380px',
+        maxHeight: '85vh',
+        overflowY: 'auto',
+        zIndex: 10,
+        boxShadow: `
+          0 25px 50px rgba(255,204,0,0.4),
+          0 0 0 1px rgba(255,255,255,0.2),
+          inset 0 1px 0 rgba(255,255,255,0.3)
+        `,
+        border: '2px solid #ffcc00',
+        backdropFilter: 'blur(15px)',
+        animation: visible ? 'slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'fadeOutLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        opacity: visible ? 1 : 0,
+        cursor: clickableClose ? 'pointer' : 'default',
+        transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+      }}
+      onClick={clickableClose ? handleClose : undefined}
+    >
       <style jsx>{`
         @keyframes slideInLeft {
           from {
@@ -42,6 +67,16 @@ const skills = aboutMeData.skills
           to {
             transform: translateX(0) translateY(-50%);
             opacity: 1;
+          }
+        }
+        @keyframes fadeOutLeft {
+          from {
+            transform: translateX(0) translateY(-50%);
+            opacity: 1;
+          }
+          to {
+            transform: translateX(-100%) translateY(-50%);
+            opacity: 0;
           }
         }
         @keyframes pulse {
@@ -246,42 +281,6 @@ const skills = aboutMeData.skills
         ))}
       </div>
 
-      {/* Actions */}
-      <div style={{
-        display: 'flex',
-        gap: '12px',
-        paddingTop: '16px',
-        borderTop: '1px solid rgba(255,204,0,0.3)'
-      }}>
-        <button 
-          onClick={onClose} 
-          style={{ 
-            padding: '12px 20px',
-            backgroundColor: 'rgba(255,255,255,0.9)',
-            border: '1px solid rgba(255,136,0,0.5)',
-            borderRadius: '12px',
-            color: '#1a1a1a',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            fontSize: '14px',
-            fontWeight: '600',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.transform = 'translateY(-2px)'
-            e.target.style.boxShadow = '0 8px 16px rgba(255,136,0,0.3)'
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = 'translateY(0)'
-            e.target.style.boxShadow = 'none'
-          }}
-        >
-          <span>✕</span>
-          <span>Fermer</span>
-        </button>
-      </div>
     </div>
   )
 }

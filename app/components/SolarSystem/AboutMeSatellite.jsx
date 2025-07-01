@@ -105,7 +105,7 @@ export default function AboutMeSatellite({ onSelect, resetTrigger, sunPosition =
     const minDistance = 5
     const maxDistance = 50
     const normalizedZoom = Math.max(0, Math.min(1, (distance - minDistance) / (maxDistance - minDistance)))
-    const positionY = 8 + (normalizedZoom * 10)
+    const positionY = 10 + (normalizedZoom * 10)
     const distanceFactor = 3 + (normalizedZoom * 15)
     return {
       position: [0, positionY, 0],
@@ -127,6 +127,18 @@ export default function AboutMeSatellite({ onSelect, resetTrigger, sunPosition =
   const handleUnhover = () => {
     setHovered(false)
   }
+  const [showTooltip, setShowTooltip] = useState(false)
+  const [tooltipVisible, setTooltipVisible] = useState(false)
+  useEffect(() => {
+    if (hovered) {
+      setShowTooltip(true)
+      setTimeout(() => setTooltipVisible(true), 10)
+    } else if (showTooltip) {
+      setTooltipVisible(false)
+      const timeout = setTimeout(() => setShowTooltip(false), 250)
+      return () => clearTimeout(timeout)
+    }
+  }, [hovered])
 
   useFrame(({ clock }) => {
     const newTooltipProps = getTooltipProps()
@@ -351,8 +363,8 @@ export default function AboutMeSatellite({ onSelect, resetTrigger, sunPosition =
           </mesh>
         )}
 
-        {/* Tooltip About Me */}
-        {hovered && (
+        {/* Tooltip du satellite - À propos de moi */}
+        {showTooltip && (
           <Html 
             position={tooltipProps.position}
             center
@@ -361,22 +373,26 @@ export default function AboutMeSatellite({ onSelect, resetTrigger, sunPosition =
             transform
             sprite
           >
-            <div style={{
-              background: 'linear-gradient(135deg, rgba(0,170,255,0.95) 0%, rgba(0,100,200,0.95) 100%)',
-              borderRadius: '16px',
-              padding: '16px',
-              minWidth: '280px',
-              maxWidth: '320px',
-              boxShadow: '0 20px 40px rgba(0,170,255,0.4), 0 0 0 1px rgba(255,255,255,0.2)',
-              color: 'white',
-              textAlign: 'center',
-              pointerEvents: 'none',
-              backdropFilter: 'blur(10px)',
-              border: '2px solid #00aaff',
-              animation: 'fadeInScale 0.3s ease-out',
-              transformOrigin: 'center bottom',
-              transition: 'all 0.2s ease-out',
-            }}>
+            <div
+              style={{
+                background: 'linear-gradient(135deg, rgba(0,170,255,0.95) 0%, rgba(0,102,204,0.95) 100%)',
+                borderRadius: '16px',
+                padding: '16px',
+                minWidth: '260px',
+                maxWidth: '340px',
+                boxShadow: '0 20px 40px rgba(0,170,255,0.3), 0 0 0 1px rgba(255,255,255,0.2)',
+                color: 'white',
+                textAlign: 'left',
+                pointerEvents: 'none',
+                backdropFilter: 'blur(10px)',
+                border: '2px solid #00aaff',
+                animation: tooltipVisible ? 'fadeInScale 0.3s ease-out' : 'fadeOutScale 0.25s ease-in',
+                transformOrigin: 'center bottom',
+                transition: 'all 0.2s ease-out',
+                fontSize: '12px',
+                opacity: tooltipVisible ? 1 : 0,
+              }}
+            >
               <style jsx>{`
                 @keyframes fadeInScale {
                   from {
@@ -386,6 +402,16 @@ export default function AboutMeSatellite({ onSelect, resetTrigger, sunPosition =
                   to {
                     opacity: 1;
                     transform: scale(1) translateY(0);
+                  }
+                }
+                @keyframes fadeOutScale {
+                  from {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                  }
+                  to {
+                    opacity: 0;
+                    transform: scale(0.8) translateY(10px);
                   }
                 }
               `}</style>

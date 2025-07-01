@@ -1,8 +1,8 @@
 import React from 'react'
-import SunDetailUI from './SelectedUI/SunDetailUI'
-import PlanetDetailUI from './SelectedUI/PlanetDetailUI'
-import SatelliteDetailUI from './SelectedUI/SatelliteDetailUI'
-import AboutMeDetailUI from './SelectedUI/AboutMeDetailUI'
+import SunDetailUI from './SunDetailUI'
+import PlanetDetailUI from './PlanetDetailUI'
+import SatelliteDetailUI from './SatelliteDetailUI'
+import AboutMeDetailUI from './AboutMeDetailUI'
 
 export default function SelectedPlanetUI({ selected, onClose }) {
   if (!selected) return null
@@ -13,7 +13,7 @@ export default function SelectedPlanetUI({ selected, onClose }) {
       return <AboutMeDetailUI selected={selected} onClose={onClose} />
     }
     if (name.includes('soleil') || name.includes('sun') || name.includes('compétences')) {
-      return <SunDetailUI selected={selected} onClose={onClose} />
+      return <SunDetailUI selected={selected} onClose={onClose} clickableClose />
     }
     if (selected.type === 'satellite' || name.includes('équipe') || name.includes('team')) {
       return <SatelliteDetailUI selected={selected} onClose={onClose} />

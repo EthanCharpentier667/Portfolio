@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import aboutMeData from '../../../data/AboutMeData'
 import { a } from 'framer-motion/client'
 
@@ -13,6 +13,30 @@ export default function AboutMeDetailUI({ selected, onClose }) {
     values: aboutMeData?.values || ['Innovation', 'Performance', 'Collaboration', 'Apprentissage continu'],
     journey: aboutMeData?.journey || [],
   }
+  const [visible, setVisible] = useState(false)
+  const [shouldRender, setShouldRender] = useState(true)
+  useEffect(() => {
+    setVisible(true)
+  }, [])
+  useEffect(() => {
+    if (!selected && visible) {
+      setVisible(false)
+      const timeout = setTimeout(() => {
+        setShouldRender(false)
+        if (onClose) onClose()
+      }, 300)
+      return () => clearTimeout(timeout)
+    }
+  }, [selected])
+  const handleClose = () => {
+    setVisible(false)
+    setTimeout(() => {
+      setShouldRender(false)
+      if (onClose) onClose()
+    }, 300)
+  }
+
+  if (!shouldRender) return null
 
   return (
     <div style={{
@@ -36,9 +60,10 @@ export default function AboutMeDetailUI({ selected, onClose }) {
       `,
       border: '2px solid #00aaff',
       backdropFilter: 'blur(15px)',
-      animation: 'slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+      animation: visible ? 'slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'fadeOutLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+      opacity: visible ? 1 : 0,
+      transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
     }}>
-      
       <style jsx>{`
         @keyframes slideInLeft {
           from {
@@ -48,6 +73,16 @@ export default function AboutMeDetailUI({ selected, onClose }) {
           to {
             transform: translateX(0) translateY(-50%);
             opacity: 1;
+          }
+        }
+        @keyframes fadeOutLeft {
+          from {
+            transform: translateX(0) translateY(-50%);
+            opacity: 1;
+          }
+          to {
+            transform: translateX(-100%) translateY(-50%);
+            opacity: 0;
           }
         }
         @keyframes float {
@@ -292,9 +327,9 @@ export default function AboutMeDetailUI({ selected, onClose }) {
           <span>LinkedIn</span>
         </a>
         
-        <button 
-          onClick={onClose} 
-          style={{ 
+        <a
+          href="mailto:ethan.charpentier@epitech.eu"
+          style={{
             padding: '12px 20px',
             backgroundColor: 'rgba(255,255,255,0.15)',
             border: '1px solid rgba(0,170,255,0.3)',
@@ -307,6 +342,7 @@ export default function AboutMeDetailUI({ selected, onClose }) {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
+            textDecoration: 'none',
           }}
           onMouseEnter={(e) => {
             e.target.style.backgroundColor = 'rgba(255,255,255,0.2)'
@@ -317,9 +353,9 @@ export default function AboutMeDetailUI({ selected, onClose }) {
             e.target.style.transform = 'translateY(0)'
           }}
         >
-          <span>✕</span>
-          <span>Fermer</span>
-        </button>
+          <span role="img" aria-label="email">✉️</span>
+          <span>Email</span>
+        </a>
       </div>
     </div>
   )

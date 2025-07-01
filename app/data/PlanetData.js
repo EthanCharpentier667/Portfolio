@@ -226,7 +226,7 @@ const planetData = [
   {
     name: "Launcher",
     size: 0.5,
-    distance: 7.8,
+    distance: 10,
     speed: 0.25,
     color: "#f59e0b",
     icon: "🛰️",
