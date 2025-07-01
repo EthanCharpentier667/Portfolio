@@ -20,12 +20,108 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.gradient-text {
-  background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Animations pour l'écran d'accueil */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
-html {
-  scroll-behavior: smooth;
+.animate-fadeIn {
+  animation: fadeIn 1.2s ease-out forwards;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+.animation-delay-800 {
+  animation-delay: 800ms;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+.animation-delay-1200 {
+  animation-delay: 1200ms;
+}
+
+@keyframes scrollIndicator {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.animate-scrollIndicator {
+  animation: scrollIndicator 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Ajoutez ces styles à votre fichier globals.css existant */
+
+@font-face {
+  font-family: "Pixel";
+  src: url("/fonts/pixel.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.font-pixel {
+  font-family: "Pixel", monospace;
+  letter-spacing: 0.05em;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-scrollIndicator {
+  animation: scrollIndicator 1.5s ease-in-out infinite;
+}
+
+@keyframes scrollIndicator {
+  0%, 100% {
+    transform: translateY(-50%);
+  }
+  50% {
+    transform: translateY(50%);
+  }
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+.animation-delay-800 {
+  animation-delay: 800ms;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+.animation-delay-1200 {
+  animation-delay: 1200ms;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out forwards;
 }
