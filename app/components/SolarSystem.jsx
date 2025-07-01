@@ -35,8 +35,8 @@ function SolarSystemScene({
         ref={setControls}
         enabled={!isTransitioning}
         enableZoom 
-        maxDistance={80}
-        minDistance={18}
+        maxDistance={50}
+        minDistance={5}
         enablePan={false}
       />
       
@@ -85,7 +85,7 @@ function SolarSystemScene({
               camera={camera}
               controls={controls}
               gl={gl}
-              overviewCameraPosition={[0, 5, 12]}
+              overviewCameraPosition={[0, 8, 16]}
               overviewCameraTarget={[0, 0, 0]}
             />
           ))}
@@ -177,7 +177,7 @@ export default function SolarSystem() {
         />
       )}
       <Canvas 
-        camera={{ position: [0, 6, 14], fov: 60 }}
+        camera={{ position: [0, 8, 16], fov: 60 }}
         gl={{ antialias: true }}
       >
         <SolarSystemScene 

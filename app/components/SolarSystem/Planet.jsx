@@ -16,7 +16,7 @@ export default function Planet({
   camera: propCamera, 
   controls: propControls, 
   gl,
-  overviewCameraPosition = [0, 5, 12],
+  overviewCameraPosition = [0, 8, 16],
   overviewCameraTarget = [0, 0, 0]
 }) {
   const planetMeshRef = useRef()
@@ -219,15 +219,20 @@ export default function Planet({
         setPlanetPaused(false)
         setShowSatellites(false)
         setHoveredSatellite(null)
+        // Correction : forcer la caméra et le target à la position de base
+        camera.position.set(...overviewCameraPosition)
+        controls.target.set(...overviewCameraTarget)
+        controls.update()
+      } else {
+        const t = easeInOutCubic(zoomProgressRef.current)
+        if (originalCameraPos.current && targetCameraPos.current) {
+          camera.position.lerpVectors(originalCameraPos.current, targetCameraPos.current, t)
+        }
+        if (originalControlsTarget.current && targetControlsTarget.current) {
+          controls.target.lerpVectors(originalControlsTarget.current, targetControlsTarget.current, t)
+        }
+        controls.update()
       }
-      const t = easeInOutCubic(zoomProgressRef.current)
-      if (originalCameraPos.current && targetCameraPos.current) {
-        camera.position.lerpVectors(originalCameraPos.current, targetCameraPos.current, t)
-      }
-      if (originalControlsTarget.current && targetControlsTarget.current) {
-        controls.target.lerpVectors(originalControlsTarget.current, targetControlsTarget.current, t)
-      }
-      controls.update()
     }
     if (texturedCartoonMaterial) {
       texturedCartoonMaterial.uniforms.time.value = currentTime
